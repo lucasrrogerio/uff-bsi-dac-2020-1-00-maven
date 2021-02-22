@@ -17,17 +17,17 @@ import java.io.Serializable;
 public class MessageBean implements Serializable {
      
     private String msg;
-        
+
     public MessageBean() {
+        // Empty constructor.
     }
-    
+
     public String getMsg() {
         return msg;
     }
     
     public void setMsg(String value) {
         switch (value){
-            case "":
             case "pt":
                 msg = "Alô";
                 break;
@@ -39,6 +39,8 @@ public class MessageBean implements Serializable {
                 break;
             case "fr":
                 msg = "Bonjour";
+                break;
+            default:
                 break;
         }
     }

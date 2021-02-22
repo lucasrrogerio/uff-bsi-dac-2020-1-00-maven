@@ -20,32 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/alomundo")
 public class HelloServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet HelloServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet HelloServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
-
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -58,45 +32,7 @@ public class HelloServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        String msg = "";
-        
-        String lang = request.getParameter("lang");
-        if(lang==null)
-            lang = "pt";
-        switch(lang){
-            case "pt":
-                msg = "Alô, ";
-                break;
-            case "en":
-                msg = "Hello, ";
-                break;
-            case "fr":
-                msg = "Bonjour, ";
-                break;
-        }
-        
-        String nome = request.getParameter("nome");
-
-        if(nome==null)
-            nome = "Fulano";
-        
-        msg = msg+nome+"!";
-
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet HelloServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet HelloServlet</h1>");
-            out.println("<p>" + msg + "</p>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+        getParameters(request, response);
     }
 
     /**
@@ -110,47 +46,91 @@ public class HelloServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String msg = "";
-        
+        getParameters(request, response);
+    }
+
+    private void getParameters(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+
         String lang = request.getParameter("lang");
-        if(lang==null)
-            lang = "pt";
-        switch(lang){
-            case "pt":
-                msg = "Alô, ";
-                break;
-            case "en":
-                msg = "Hello, ";
-                break;
-            case "fr":
-                msg = "Bonjour, ";
-                break;
-            case "de":
-                msg = "Hallo, ";
-                break;
-        }
-        
+        String msg = validateMessage(lang);
+
         String nome = request.getParameter("nome");
+        nome = validateUsername(nome);
 
-        if(nome==null)
-            nome = "Fulano";
-        
-        msg = msg+nome+"!";
+        String email = request.getParameter("email");
+        email = validadeEmail(email);
 
+        String idade = request.getParameter("idade");
+        idade = validateAge(idade);
+
+        String genero = request.getParameter("genero");
+        genero = validateGender(genero);
+
+        createPage(response, msg, nome, email, idade, genero);
+    }
+
+    private void createPage(HttpServletResponse response, String msg, String nome, String email, String idade, String genero)
+            throws IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet HelloServlet</title>");            
+            out.println("<title>Servlet HelloServlet</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet HelloServlet</h1>");
-            out.println("<p>" + msg + "</p>");
+            out.println("<p>" + msg + nome + "!</p>");
+            out.println("<p> Seu email é "+ email + ".</p>");
+            out.println("<p> Você tem "+ idade + " anos.</p>");
+            out.println("<p> Seu gênero é " + genero + ".</p>");
             out.println("</body>");
             out.println("</html>");
         }
+    }
+
+    private String validateMessage(String lang) {
+        if(lang == null)
+            lang = "pt";
+        switch(lang){
+            case "en":
+                return "Hello, ";
+            case "fr":
+                return "Bonjour, ";
+            case "de":
+                return "Hallo, ";
+            default:
+                return "Alô, ";
+        }
+    }
+
+    private String validateUsername(String nome) {
+        if (nome == null) {
+            nome = "Fulano";
+        }
+        return nome;
+    }
+
+    private String validadeEmail(String email) {
+        if (email == null) {
+            email = "fulano@gmail.com";
+        }
+        return email;
+    }
+
+    private String validateAge(String idade) {
+        if (idade == null) {
+            idade = "50";
+        }
+        return idade;
+    }
+
+    private String validateGender(String genero) {
+        if (genero == null) {
+            genero = "outro";
+        }
+        return genero;
     }
 
     /**
